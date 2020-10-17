@@ -1,11 +1,21 @@
-const http = require("http");
-const fs = require("fs");
-const app = http.createServer((req,res)=>{
-    let url = http.request.url;
-    if(req.url === "/"){
-        url = "/index.html";
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const app = express();
+
+app.use(cookieParser());
+app.get("/",(req,res)=>{
+    let count;
+    if(req.cookies.count === undefined){
+        count = 0;
+    }else{
+        count = Number(req.cookies.count);
     }
-    res.writeHead(200);
-    res.end(fs.readFileSync(__dirname+url))
-});
-app.listen(3000);
+
+    const count_plus = count+1;
+    res.cookie("count", count_plus);
+    res.send(`count : ${count}`);
+})
+
+app.listen(3001,()=>{
+    console.log("ㅎㅎ");
+})
